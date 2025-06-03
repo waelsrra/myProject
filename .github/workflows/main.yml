@@ -1,0 +1,30 @@
+name: Deploy HTML/CSS to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]  
+
+jobs:
+  deploy:
+    runs-on: windows-latest 
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3 
+
+    - name: Setup Python (for HTTP server)
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' 
+
+    - name: Run a local server to test (Optional)
+      run: |
+        python -m http.server 8000 &
+        Start-Process "http://localhost:8000"  
+      shell: pwsh  # استخدام PowerShell
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3  
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}  
+        publish_dir: ./  
